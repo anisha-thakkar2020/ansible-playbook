@@ -1,0 +1,16 @@
+- name: Deploy and Restart
+  hosts: webserver
+  become: yes
+  become_method: sudo
+  vars:
+     remote_warfile: /var/lib/jenkins/workspace/SimpliLearnCMProject1/webapp/target/webapp.war
+     remote_webapps: /opt/apache-tomcat-8.5.64/webapps/
+
+  tasks:
+    - name: copy war file
+      command: cp {{remote_warfile}} {{remote_webapps}}
+      notify: restart tomcat
+
+  handlers:
+    - name: restart tomcat
+      service: name=tomcat state=restart

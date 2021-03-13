@@ -1,0 +1,17 @@
+- name: Git checkout and Maven Build
+  hosts: ansible
+  become: yes
+  become_method: sudo
+  vars:
+     local_git_credential: gitcredential/.git-credentials
+     remote_git_credential: ~/.git-credentials
+
+  tasks:
+    - name: copy git .git-credentials
+      copy: src={{ local_git_credential }} dest={{ remote_git_credential }}
+
+    - name: check out the repository on the host
+      git: repo=https://github.com/anisha-thakkar2020/hello-world-1.git dest=/var/lib/jenkins/workspace/SimpliLearnCMProject1/ accept_hostkey=yes
+
+    - name: maven clean package
+      command: /opt/maven/apache-maven-3.6.3/bin/mvn -f /var/lib/jenkins/workspace/SimpliLearnCMProject1/pom.xml package
